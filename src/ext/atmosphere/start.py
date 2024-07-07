@@ -51,7 +51,7 @@ class CampfireCog(commands.Cog):
         * If bot is currently in voice it will be disconnected.
         """
         await self.player.restart()
-        await interaction.response.send_message("Campfire bot restarted", ephemeral=True)
+        await interaction.response.send_message("Cindocu-Tavern restarted", ephemeral=True)
 
 def setup(bot: Bot) -> None:
     bot.add_cog(CampfireCog(bot))
