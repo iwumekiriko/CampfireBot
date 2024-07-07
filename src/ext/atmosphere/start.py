@@ -6,6 +6,7 @@ from src.bot import Bot
 from src.ext.atmosphere.choices import AtmosphereChoices
 from src.utils import checks
 from src.ext.atmosphere.player import Player
+from src.utils.slash_shortcuts import only_admin
 
 
 class CampfireCog(commands.Cog):
@@ -13,7 +14,7 @@ class CampfireCog(commands.Cog):
         self.bot = bot
         self.player = Player(bot)
     
-    @commands.slash_command()
+    @commands.slash_command(**only_admin)
     @commands.check(checks.user_is_connected) # type: ignore
     async def start(
         self,
@@ -40,7 +41,7 @@ class CampfireCog(commands.Cog):
         await self.player.play(music_file, channel)
         await interaction.response.send_message(f"Playing {sound.value + '.mp3'}", ephemeral=True)
 
-    @commands.slash_command()
+    @commands.slash_command(**only_admin)
     async def restart(
         self,
         interaction: GuildCommandInteraction
