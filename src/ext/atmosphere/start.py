@@ -1,45 +1,56 @@
 import os
-import disnake
+from disnake import GuildCommandInteraction
 from disnake.ext import commands
 
 from src.bot import Bot
 from src.ext.atmosphere.choices import AtmosphereChoices
 from src.utils import checks
+from src.ext.atmosphere.player import Player
+
 
 class CampfireCog(commands.Cog):
     def __init__(self, bot: Bot) -> None:
         self.bot = bot
+        self.player = Player(bot)
     
     @commands.slash_command()
     @commands.check(checks.user_is_connected) # type: ignore
     async def start(
         self,
-        interaction: disnake.GuildCommandInteraction,
+        interaction: GuildCommandInteraction,
         mp3: str = commands.Param(
             choices={mp3.get_option() :
                      mp3.name for mp3 in AtmosphereChoices}
         )
     ) -> None:
         """
-        Connects the bot to vc and playing chosen mp3 file
+        Connects the bot to vc and plays chosen mp3 file
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         mp3: Файл с музыкой
         """
         sound = AtmosphereChoices[mp3]
-        filename = sound.value + '.mp3'
-        filepath = os.path.dirname(__file__) + f"/mp3/{filename}"
+        music_file = os.path.dirname(__file__) + f"/mp3/{sound.value + '.mp3'}"
 
-        source = disnake.PCMVolumeTransformer(
-            disnake.FFmpegPCMAudio(filepath), volume=0.75
-        )
-        try:
-            voice_channel = await interaction.author.voice.channel.connect() # type: ignore
-            voice_channel.play(source, after=lambda e: voice_channel.play(source))
-            await interaction.response.send_message(f"Playing {sound.value}.mp3", ephemeral=True)
-        except Exception as e:
-            await interaction.response.send_message(f"Error playing the file: {e}")
+        voice = interaction.author.voice
+        if voice:
+            channel = voice.channel
+
+        await self.player.play(music_file, channel)
+        await interaction.response.send_message(f"Playing {sound.value + '.mp3'}", ephemeral=True)
+
+    @commands.slash_command()
+    async def restart(
+        self,
+        interaction: GuildCommandInteraction
+    ) -> None:
+        """
+        Resets bot to start settings.
+        * If bot is currently in voice it will be disconnected.
+        """
+        await self.player.restart()
+        await interaction.response.send_message("Campfire bot restarted", ephemeral=True)
 
 def setup(bot: Bot) -> None:
     bot.add_cog(CampfireCog(bot))

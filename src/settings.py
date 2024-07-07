@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 APP_NAME = "CampfireBot"
-DEBUG = True
+LOGS_PATH = 'logs'
+DEBUG = False
 
 DEVELOPMENT = False
 TEST_GUILD_IDS = []

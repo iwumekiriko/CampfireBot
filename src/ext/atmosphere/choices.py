@@ -8,5 +8,5 @@ class AtmosphereChoices(Enum):
 
 
 TRANSLATIONS = {
-    'campfire': "Звуки костра"
+    'campfire': "Звуки костра",
 }
