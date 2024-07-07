@@ -2,7 +2,7 @@ from enum import Enum
 
 class AtmosphereChoices(Enum):
     CAMPFIRE = 'campfire'
-    RAIN_GUITAR = 'rain_guitar'
+    WATER_GUITAR = 'water_guitar'
     ELEVATOR = 'elevator'
 
     def get_option(self) -> str:
@@ -11,6 +11,6 @@ class AtmosphereChoices(Enum):
 
 TRANSLATIONS = {
     'campfire': "Звуки костра",
-    'rain_guitar': "Гитара под звуки дождя",
+    'water_guitar': "Гитара под звуки воды",
     'elevator': "Музыка из лифта"
 }
