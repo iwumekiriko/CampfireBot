@@ -1,1 +1,1 @@
-Simple bot to play local music files
+Simple music bot for [Cindocu](discord.gg/cindocu)
